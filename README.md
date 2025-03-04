@@ -86,6 +86,14 @@ PARAMS_DEFINITIONS = {
 ---
 
 ## 快速开始
+
+### 启动MuMu模拟器  
+
+- 安装MuMu模拟器并使用adb连接
+- 安装QQ.APK并启动进程
+
+```
+
 ### 启动服务
 ```bash
 python app.py
