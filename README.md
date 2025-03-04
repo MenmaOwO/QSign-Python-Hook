@@ -47,6 +47,15 @@ pip install -r requirements.txt
 - Python 3.8+  
 - Frida 16.0+  
 - Android 设备（启用 USB 调试）
+- MuMu模拟器
+- QQ.APK
+
+**必需操作**： 
+- 启动MuMu模拟器
+- 安装QQ.APK
+- 启动QQ进程
+- 使用ADB连接MuMu模拟器并推送Frida服务器
+- 运行Frida服务器
 
 ### 2. 配置文件
 创建 `config.py`：
@@ -86,13 +95,6 @@ PARAMS_DEFINITIONS = {
 ---
 
 ## 快速开始
-
-### 启动MuMu模拟器  
-
-- 安装MuMu模拟器并使用adb连接
-- 安装QQ.APK并启动进程
-
-```
 
 ### 启动服务
 ```bash
