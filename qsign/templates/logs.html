@@ -1,0 +1,113 @@
+<!-- templates/logs.html -->
+{% extends "base.html" %}
+
+{% block title %}日志查看 - QSign服务{% endblock %}
+
+{% block head %}
+<style>
+    .log-entry {
+        margin-bottom: 15px;
+        padding: 15px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+    .log-entry:hover {
+        transform: translateY(-5px);
+    }
+    .log-entry.error {
+        border-left: 5px solid #e74c3c;
+    }
+    .log-entry.success {
+        border-left: 5px solid #2ecc71;
+    }
+    .log-entry.processing {
+        border-left: 5px solid #f39c12;
+    }
+    .search-bar {
+        margin-bottom: 20px;
+    }
+    .pagination {
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="search-bar">
+    <input type="text" id="searchInput" class="form-control" placeholder="搜索日志...">
+</div>
+
+<div id="logEntries">
+    {% for log in logs %}
+    <div class="log-entry {{ log.status }}">
+        <h5>{{ log.start_time|datetime }}</h5>
+        <p><strong>状态:</strong> {{ log.status }}</p>
+        <p><strong>IP地址:</strong> {{ log.client_ip }}</p>
+        <p><strong>请求ID:</strong> {{ log.request_id }}</p>
+        <p><strong>参数:</strong> <pre>{{ log.params|tojson }}</pre></p>
+        {% if log.error %}
+        <p><strong>错误:</strong> <pre>{{ log.error }}</pre></p>
+        {% endif %}
+        <p><strong>持续时间:</strong> {{ log.duration_ms }} ms</p>
+    </div>
+    {% endfor %}
+</div>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('view_logs', page=page-1) }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </span>
+        </li>
+        {% endif %}
+        <li class="page-item active" aria-current="page">
+            <span class="page-link">{{ page }} <span class="sr-only">(current)</span></span>
+        </li>
+        {% if has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('view_logs', page=page+1) }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const logEntries = document.querySelectorAll('.log-entry');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = searchInput.value.toLowerCase();
+
+        logEntries.forEach(entry => {
+            const logText = entry.textContent.toLowerCase();
+            if (logText.includes(searchTerm)) {
+                entry.style.display = '';
+            } else {
+                entry.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

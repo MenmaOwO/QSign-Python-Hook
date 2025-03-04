@@ -1,0 +1,166 @@
+<!-- templates/stats.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>系统统计 - QSign服务</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/chart.js/4.4.0/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+        }
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', system-ui;
+        }
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        .chart-container {
+            height: 400px;
+            position: relative;
+        }
+        .badge-custom {
+            background: var(--secondary-color);
+            font-size: 0.9em;
+        }
+        h3 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class="mb-4 text-center">📊 系统运行统计</h1>
+        
+        <!-- 基础统计行 -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stats-card p-4">
+                    <h5>总请求量</h5>
+                    <div class="display-4">{{ stats.total_requests }}</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card p-4">
+                    <h5>成功率</h5>
+                    <div class="display-4">{{ stats.success_rate }}<small>%</small></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card p-4">
+                    <h5>平均耗时</h5>
+                    <div class="display-4">{{ stats.avg_duration }}<small>ms</small></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card p-4">
+                    <h5>在线服务</h5>
+                    <div class="display-4">{{ sessions|length }}</div>
+                </div>
+            </div>
+        </div>
+        <!-- 图表行 -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="stats-card p-4">
+                    <h3>📈 小时请求趋势</h3>
+                    <div class="chart-container">
+                        <canvas id="hourlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stats-card p-4">
+                    <h3>🔥 活跃账号TOP5</h3>
+                    <ol class="list-group list-group-flush">
+                        {% for uin, count in stats.top_uin %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="text-monospace">{{ uin }}</span>
+                            <span class="badge badge-custom rounded-pill">{{ count }}</span>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <!-- 详细信息行 -->
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="stats-card p-4">
+                    <h3>⚠️ 错误类型分布</h3>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>错误类型</th>
+                                <th>次数</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for error, count in stats.error_distribution.items() %}
+                            <tr>
+                                <td>{{ error }}</td>
+                                <td>{{ count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="stats-card p-4">
+                    <h3>📦 客户端分布</h3>
+                    <div class="chart-container">
+                        <canvas id="packageChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 将模板中的 stats 数据转换为 JSON 对象
+        //const stats = {{ stats|tojson }};
+
+        // 小时请求图表
+        const hourlyData = {
+            labels: Object.keys(stats.hourly_requests),
+            datasets: [{
+                label: '请求量',
+                data: Object.values(stats.hourly_requests),
+                borderColor: '#3498db',
+                tension: 0.3
+            }]
+        };
+        new Chart(document.getElementById('hourlyChart'), {
+            type: 'line',
+            data: hourlyData,
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // 客户端分布图表
+        const packageData = {
+            labels: Object.keys(stats.package_usage),
+            datasets: [{
+                data: Object.values(stats.package_usage),
+                backgroundColor: ['#3498db', '#2ecc71', '#e74c3c', '#9b59b6']
+            }]
+        };
+        new Chart(document.getElementById('packageChart'), {
+            type: 'pie',
+            data: packageData,
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    </script>
+</body>
+</html>

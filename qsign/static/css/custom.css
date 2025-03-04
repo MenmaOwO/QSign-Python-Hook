@@ -1,0 +1,18 @@
+.log-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.search-box {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.detail-pre {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+}

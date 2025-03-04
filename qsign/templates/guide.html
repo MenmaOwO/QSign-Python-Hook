@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>API 文档 - QQ 安全签名服务</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui;
+            line-height: 1.6;
+            background: #f8f9fa;
+        }
+        .api-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .api-card:hover {
+            transform: translateY(-3px);
+        }
+        pre {
+            background: #2c3e50;
+            color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-size: 0.9em;
+            tab-size: 4;
+        }
+        .param-table th {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+        .param-table td:first-child {
+            width: 220px;
+        }
+        .badge-required {
+            background: var(--danger);
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+        }
+        .section-title {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 4px;
+            height: 50%;
+            background: var(--primary);
+            transform: translateY(-50%);
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt me-2"></i>QQ 安全签名服务
+            </a>
+            <div class="d-flex">
+                <a href="/stats" class="btn btn-outline-primary me-2">统计面板</a>
+                <a href="/logs" class="btn btn-outline-secondary">日志查看</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <h1 class="text-center mb-5">API 文档</h1>
+
+        <!-- 接口说明 -->
+        <div class="api-card p-4 mb-5">
+            <div class="section-title">
+                <h3 class="mb-0">接口说明</h3>
+            </div>
+            <div class="ps-4">
+                <p class="mb-1"><strong>路径：</strong> <code>/getsign</code></p>
+                <p class="mb-1"><strong>方法：</strong> <span class="badge bg-success">POST</span></p>
+                <p class="mb-0"><strong>支持客户端：</strong></p>
+                <ul class="list-unstyled ps-3">
+                    <li>✓ <code>com.tencent.mobileqq:MSF</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 请求参数 -->
+        <div class="api-card p-4 mb-5">
+            <div class="section-title">
+                <h3 class="mb-0">请求参数</h3>
+            </div>
+            <table class="table param-table mb-0">
+                <thead>
+                    <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>必填</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>cmd</code></td>
+                        <td>string</td>
+                        <td><span class="badge badge-required">必需</span></td>
+                        <td>命令类型（如 <code>wtlogin.login</code>）</td>
+                    </tr>
+                    <tr>
+                        <td><code>seq</code></td>
+                        <td>string</td>
+                        <td><span class="badge badge-required">必需</span></td>
+                        <td>请求序列号（数字字符串）</td>
+                    </tr>
+                    <tr>
+                        <td><code>buffer</code></td>
+                        <td>string</td>
+                        <td><span class="badge badge-required">必需</span></td>
+                        <td>十六进制数据</td>
+                    </tr>
+                    <tr>
+                        <td><code>uin</code></td>
+                        <td>string</td>
+                        <td><span class="badge badge-required">必需</span></td>
+                        <td>用户唯一标识</td>
+                    </tr>
+                    <tr>
+                        <td><code>qua</code></td>
+                        <td>string</td>
+                        <td><span class="badge badge-required">必需</span></td>
+                        <td>客户端标识（如 <code>V1_AND_SQ_8.9.53_3362_YYB_D</code>）</td>
+                    </tr>
+                    <tr>
+                        <td><code>package</code></td>
+                        <td>string</td>
+                        <td><span class="badge badge-required">必需</span></td>
+                        <td>目标包名（必须为 <code>com.tencent.mobileqq:MSF</code>）</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 请求示例 -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="api-card h-100 p-4">
+                    <div class="section-title">
+                        <h3 class="mb-0">请求示例</h3>
+                    </div>
+                    <pre class="mt-3">
+curl -X POST http://localhost:5000/sign \\
+-H "Content-Type: application/json" \\
+-d '{
+    "cmd": "wtlogin.login",
+    "seq": "123456",
+    "buffer": "00010203040506070809",
+    "uin": "10001",
+    "qua": "V1_AND_SQ_8.9.53_3362_YYB_D",
+    "package": "com.tencent.mobileqq:MSF"
+}'</pre>
+                </div>
+            </div>
+
+            <!-- 响应示例 -->
+            <div class="col-md-6">
+                <div class="api-card h-100 p-4">
+                    <div class="section-title">
+                        <h3 class="mb-0">响应示例</h3>
+                    </div>
+                    <pre class="mt-3">
+                        {
+                            "data": {
+                                "extra": "1201311a9001413332453339333930354638343030303336314231313734313241444434424131313132393743353637463332304545333846443235384635304632313030443831353932443635344534393539444241443143333432393731393232333635374244353246444334374533373145433235434645343742443939453936304544334531414144413233453833463443",
+                                "sign": "0c214a9dfbedbf45c59972071f8a77aed1d19971ffde7175eeba299a74a9fff3d5a616a3e530c068201829e9f4ec25c9dbfebf347e03ef96093c664472d38b7837f0cc8b80f3738b75953720",
+                                "token": "4344792f512b497a65335447"
+                            },
+                            "status": "success"
+                        }</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注意事项 -->
+        <div class="api-card p-4 mb-5">
+            <div class="section-title">
+                <h3 class="mb-0">重要说明</h3>
+            </div>
+            <div class="ps-4">
+                <ul class="list-unstyled">
+                    <li>▶ 所有参数值必须为字符串类型</li>
+                    <li>▶ <code>buffer</code> 和 <code>seq</code> 必须为合法十六进制字符串</li>
+                    <li>▶ 建议设置请求超时时间为 5-10 秒</li>
+                    <li>▶ 遇到 400 错误请检查参数格式</li>
+                    <li>▶ 服务端时间与客户端时间差不应超过 5 分钟</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 返回顶部 -->
+    <a href="#" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        // 返回顶部按钮
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 300) {
+                $('.back-to-top').fadeIn();
+            } else {
+                $('.back-to-top').fadeOut();
+            }
+        });
+        $('.back-to-top').click(function(e) {
+            e.preventDefault();
+            $('html, body').animate({scrollTop: 0}, 500);
+        });
+    </script>
+</body>
+</html>
